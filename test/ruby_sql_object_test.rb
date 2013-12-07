@@ -22,4 +22,4 @@ end
 # p Human.all
 # p Cat.all
 
-p Human.where(:fname => "Matt", :house_id => 1)
+# p Human.where(:fname => "Matt", :house_id => 1)

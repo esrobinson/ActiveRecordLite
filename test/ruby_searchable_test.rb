@@ -1,4 +1,4 @@
-require 'active_record_lite'
+require_relative '../lib/active_record_lite'
 
 # https://tomafro.net/2010/01/tip-relative-paths-with-file-expand-path
 cats_db_file_name =
@@ -15,5 +15,6 @@ class Human < SQLObject
   my_attr_accessible(:id, :fname, :lname, :house_id)
 end
 
-p Cat.where(:name => "Breakfast")
-p Human.where(:fname => "Matt")
+c = Cat.where(:owner_id => 1)
+c.each{|cat| puts cat.name }
+# p Human.where(:fname => "Matt")
