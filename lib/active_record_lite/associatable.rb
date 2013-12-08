@@ -30,7 +30,7 @@ class HasManyAssocParams < AssocParams
   def initialize(name, params, self_class)
     @name = name
     @primary_key = params[:primary_key] || "id"
-    @foreign_key = params[:foreign_key] || "#{self_class.underscore}_id"
+    @foreign_key = params[:foreign_key] || "#{self_class.to_s.underscore}_id"
     @class_name = params[:class_name] || name.to_s.camelcase.singularize
   end
 
@@ -49,36 +49,23 @@ module Associatable
     self.assoc_params[name] = BelongsToAssocParams.new(name, params)
     define_method(name) do
       values = self.class.assoc_params[name]
-      result = DBConnection.execute(<<-SQL)
-        SELECT
-          *
-        FROM
-          #{values.other_table}
-        WHERE
-          #{values.other_table}.#{values.primary_key} =
-            #{self.send(values.foreign_key)}
+      result = values.other_class.where(
+                  values.primary_key => self.send(values.foreign_key)
+                )
 
-        SQL
-      values.other_class.new(result.first)
+      result.first
     end
   end
 
 
   def has_many(name, params = {})
-    self.assoc_params[name] = HasManyAssocParams.new(name, params, self.class)
+    self.assoc_params[name] = HasManyAssocParams.new(name, params, self.to_s)
     define_method(name) do
       values = self.class.assoc_params[name]
-      results = DBConnection.execute(<<-SQL)
-        SELECT
-          *
-        FROM
-          #{values.other_table}
-        WHERE
-          #{values.other_table}.#{values.foreign_key} =
-            #{self.send(values.primary_key)}
 
-        SQL
-      values.other_class.parse_all(results)
+      results = values.other_class.where(
+      values.foreign_key => self.send(values.primary_key)
+      )
     end
   end
 

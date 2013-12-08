@@ -15,6 +15,5 @@ class Human < SQLObject
   my_attr_accessible(:id, :fname, :lname, :house_id)
 end
 
-c = Cat.where(:owner_id => 1)
-c.each{|cat| puts cat.name }
+c = cat
 # p Human.where(:fname => "Matt")

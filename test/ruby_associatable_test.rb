@@ -24,14 +24,14 @@ end
 class House < SQLObject
   set_table_name("houses")
   my_attr_accessible(:id, :address, :house_id)
+  has_many :humans
 end
 
-cat = Cat.find(1)
-p cat
-p cat.human
+h = House.find(1)
+x = h.humans.includes(:cats)
 
-human = Human.find(1)
-p human.cats
-p human.house
-
-p cat.house
+x.each do |y|
+  puts y.lname
+  puts "----------"
+  y.instance_variable_get("@cats").each { |c| puts c }
+end

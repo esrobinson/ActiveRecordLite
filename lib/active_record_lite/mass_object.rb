@@ -26,7 +26,7 @@ class MassObject
 
   # returns list of attributes that have been whitelisted.
   def self.attributes
-    @whitelist || []
+    @whitelist ||= []
   end
 
   # takes an array of hashes.
